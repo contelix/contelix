@@ -2,7 +2,7 @@ import bodyParser from "body-parser";
 import "./env"
 import express from "express";
 import { HOSTNAME, PORT } from "./env";
-import ImageRouter from "./router/minio/ImageRouter.router";
+import ImageRouter from "./router/image/ImageRouter.router";
 
 const app = express();
 
