@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {Client} from "minio";
+import { Client } from "minio";
 import { MINIO_ACCESS_KEY, MINIO_BUCKET, MINIO_END_POINT, MINIO_PORT, MINIO_SECRET_KEY, MINIO_USE_SSL } from "../../env";
 
 const minioClient = new Client({
@@ -13,12 +13,13 @@ const minioClient = new Client({
 const ImageRouter = Router();
 
 ImageRouter.get("/:id", async (req, res) => {
-    const {id} = req.params;
+    const { id } = req.params;
     try {
+        const {metaData} = await minioClient.statObject(MINIO_BUCKET, id);
         const img = await minioClient.getObject(MINIO_BUCKET, id);
-        res.status(200).type("image/jpeg");
+        res.status(200).type(metaData["content-type"]);
         img.pipe(res);
-    } catch(e:unknown) {
+    } catch (e: unknown) {
         res.status(404).send(`${id} not found`)
     }
 })
