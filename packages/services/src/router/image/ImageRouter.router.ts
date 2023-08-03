@@ -1,33 +1,35 @@
 import { Router } from "express";
-import { Client } from "minio";
-import {
-    MINIO_ACCESS_KEY,
-    MINIO_BUCKET,
-    MINIO_END_POINT,
-    MINIO_PORT,
-    MINIO_SECRET_KEY,
-    MINIO_USE_SSL
-} from "../../env";
-
-const minioClient = new Client({
-    endPoint: MINIO_END_POINT,
-    port: MINIO_PORT,
-    useSSL: MINIO_USE_SSL,
-    accessKey: MINIO_ACCESS_KEY,
-    secretKey: MINIO_SECRET_KEY
-});
+import multer from "multer";
+import fs from "fs";
+import { getMinioObject, getMinioObjectMeta, putMinioObject } from "../../helper/minio";
 
 const ImageRouter = Router();
 
 ImageRouter.get("/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const { metaData } = await minioClient.statObject(MINIO_BUCKET, id);
-        const img = await minioClient.getObject(MINIO_BUCKET, id);
+        const { metaData } = await getMinioObjectMeta(id);
+        const img = await getMinioObject(id);
         res.status(200).type(metaData["content-type"]);
         img.pipe(res);
     } catch (e: unknown) {
         res.status(404).send(`${id} not found`)
+    }
+})
+
+const upload = multer({
+    dest: `./cache/multer`
+}).single('file');
+
+ImageRouter.post("/", upload, async (req, res) => {
+    try {
+        await putMinioObject("asdf/"+req.file?.originalname || "asdf", req.file?.path || "asdf", {
+            "content-type": req.file?.mimetype || "application/appliaction"
+        });
+        fs.unlinkSync(req.file?.path || "");
+        res.json({ ...req.file, status: "OK" });
+    } catch (e: unknown) {
+        res.status(500).send("Error on upload");
     }
 })
 
