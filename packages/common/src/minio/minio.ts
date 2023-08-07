@@ -38,12 +38,12 @@ export async function getMinioObjectMeta(name: string) {
 
 export async function putMinioObject(objectName: string, filePath: string, owner: string, metaData?: ItemBucketMetadata) {
     const minioClient = await getMinio();
-    const putResult = await minioClient.fPutObject(MINIO_BUCKET, objectName, filePath, metaData);
+    const putResult = await minioClient.fPutObject(MINIO_BUCKET, `${owner}/${objectName}`, filePath, metaData);
     await setMinioObjectTagList(objectName || "", { owner })
     return putResult;
 }
 
 export async function setMinioObjectTagList(objectName: string, tagList: TagList) {
     const minioClient = await getMinio();
-    return await minioClient.setObjectTagging(MINIO_BUCKET, objectName, tagList)
+    return await minioClient.setObjectTagging(MINIO_BUCKET, objectName, tagList);
 }

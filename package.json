@@ -12,6 +12,7 @@
     "start": "yarn workspaces run start",
     "test": "yarn workspaces run test",
     "build": "yarn workspaces run build",
+    "clean": "yarn workspaces run clean",
     "services:start": "yarn workspace @fluffy/services run start",
     "services:test": "yarn workspace @fluffy/services run test",
     "services:dev": "yarn workspace @fluffy/services run dev",

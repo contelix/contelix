@@ -5,17 +5,19 @@
   "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "yarn clean && tsc",
     "start": "echo no start script for common",
-    "test": "echo Not implemented"
+    "test": "echo Not implemented",
+    "clean": "rimraf dist"
   },
   "dependencies": {
-    "minio": "^7.1.1",
     "dotenv": "^16.3.1",
-    "jsonwebtoken": "^9.0.1"
+    "jsonwebtoken": "^9.0.1",
+    "minio": "^7.1.1"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.2",
+    "rimraf": "^5.0.1",
     "typescript": "^5.1.6"
   }
 }
