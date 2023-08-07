@@ -10,6 +10,8 @@ if(env.NODE_ENV !== "production") {
 export const PORT:number = parseInt(env.PORT || "3000") || 3000;
 export const HOSTNAME:string = env.HOSTNAME || "localhost";
 
+export const JWT_KEY:string = env.JWT_KEY || "TO BE SET!";
+
 export const MINIO_ACCESS_KEY:string = env.MINIO_ACCESS_KEY || "minioadmin";
 export const MINIO_SECRET_KEY:string = env.MINIO_SECRET_KEY || "minioadmin";
 export const MINIO_USE_SSL:boolean = env.MINIO_USE_SSL?.toLowerCase() === "true";

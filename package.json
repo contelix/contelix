@@ -11,9 +11,11 @@
   "scripts": {
     "start": "yarn workspaces run start",
     "test": "yarn workspaces run test",
+    "build": "yarn workspaces run build",
     "services:start": "yarn workspace @fluffy/services run start",
     "services:test": "yarn workspace @fluffy/services run test",
-    "services:dev": "yarn workspace @fluffy/services run dev"
+    "services:dev": "yarn workspace @fluffy/services run dev",
+    "common:build": "yarn workspace @fluffy/common run build"
   },
   "devDependencies": {
     "yarn": "^1.22.19"

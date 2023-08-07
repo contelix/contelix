@@ -1,9 +1,9 @@
-import { Client, ItemBucketMetadata } from "minio";
+import { Client, ItemBucketMetadata, TagList } from "minio";
 import { MINIO_ACCESS_KEY, MINIO_BUCKET, MINIO_END_POINT, MINIO_PORT, MINIO_SECRET_KEY, MINIO_USE_SSL } from "../env";
 
 let minioClient: undefined | Client;
 
-export default async function getMinio(): Promise<Client> {
+async function getMinio(): Promise<Client> {
     if (minioClient) {
         return minioClient;
     }
@@ -17,7 +17,7 @@ export default async function getMinio(): Promise<Client> {
     });
 
     console.log(`Minio Client created.`)
-    
+
     if (!await minioClient.bucketExists(MINIO_BUCKET)) {
         await minioClient.makeBucket(MINIO_BUCKET);
         console.log(`Bucket '${MINIO_BUCKET}' was created successfully.`)
@@ -36,7 +36,14 @@ export async function getMinioObjectMeta(name: string) {
     return await minioClient.statObject(MINIO_BUCKET, name);
 }
 
-export async function putMinioObject(objectName: string, filePath: string, metaData?: ItemBucketMetadata) {
+export async function putMinioObject(objectName: string, filePath: string, owner: string, metaData?: ItemBucketMetadata) {
     const minioClient = await getMinio();
-    return await minioClient.fPutObject(MINIO_BUCKET, objectName, filePath, metaData);
+    const putResult = await minioClient.fPutObject(MINIO_BUCKET, objectName, filePath, metaData);
+    await setMinioObjectTagList(objectName || "", { owner })
+    return putResult;
+}
+
+export async function setMinioObjectTagList(objectName: string, tagList: TagList) {
+    const minioClient = await getMinio();
+    return await minioClient.setObjectTagging(MINIO_BUCKET, objectName, tagList)
 }

@@ -1,0 +1,21 @@
+{
+  "name": "@fluffy/common",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "start": "echo no start script for common",
+    "test": "echo Not implemented"
+  },
+  "dependencies": {
+    "minio": "^7.1.1",
+    "dotenv": "^16.3.1",
+    "jsonwebtoken": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.2",
+    "typescript": "^5.1.6"
+  }
+}
