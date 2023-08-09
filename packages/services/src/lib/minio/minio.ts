@@ -1,5 +1,5 @@
 import { Client, ItemBucketMetadata, TagList } from "minio";
-import { MINIO_ACCESS_KEY, MINIO_BUCKET, MINIO_END_POINT, MINIO_PORT, MINIO_SECRET_KEY, MINIO_USE_SSL } from "../env";
+import { MINIO_ACCESS_KEY, MINIO_BUCKET, MINIO_END_POINT, MINIO_PORT, MINIO_SECRET_KEY, MINIO_USE_SSL } from "../../env";
 
 let minioClient: undefined | Client;
 

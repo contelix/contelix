@@ -1,6 +1,6 @@
 import { sign } from "jsonwebtoken";
 import FluffyAuthErro from "../errors/FluffyAuthError.error";
-import { JWT_KEY } from "../env";
+import { JWT_KEY } from "../../env";
 
 export interface JwtTokens {
     token: string,

@@ -1,5 +1,5 @@
 import { MongoClient, Db, Collection, ObjectId } from "mongodb";
-import { MONGO_CONNECTION_STRING, MONGO_DATABASE_NAME, MONGO_IMAGES_COLLECTION_NAME } from "../env";
+import { MONGO_CONNECTION_STRING, MONGO_DATABASE_NAME, MONGO_IMAGES_COLLECTION_NAME } from "../../env";
 import { Image } from "../fluffy";
 
 let mongoClient: undefined | MongoClient;

@@ -1,8 +1,10 @@
+import "./env";
+
 import bodyParser from "body-parser";
 import express from "express";
-import { HOSTNAME, PORT } from "@fluffy/common";
 import ImageRouter from "./router/image/ImageRouter.router";
 import AuthRouter from "./router/auth/AuthRouter.router";
+import { HOSTNAME, PORT } from "./lib";
 
 const app = express();
 

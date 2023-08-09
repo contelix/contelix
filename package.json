@@ -15,8 +15,7 @@
     "clean": "yarn workspaces run clean",
     "services:start": "yarn workspace @fluffy/services run start",
     "services:test": "yarn workspace @fluffy/services run test",
-    "services:dev": "yarn workspace @fluffy/services run dev",
-    "common:build": "yarn workspace @fluffy/common run build"
+    "services:dev": "yarn workspace @fluffy/services run dev"
   },
   "devDependencies": {
     "yarn": "^1.22.19"

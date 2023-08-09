@@ -1,9 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import fs from "fs";
-import { addFluffyImage, getFluffyImage } from "@fluffy/common";
-import { Image } from "@fluffy/common";
-
+import { Image, addFluffyImage, getFluffyImage } from "../../lib";
 
 const ImageRouter = Router();
 
