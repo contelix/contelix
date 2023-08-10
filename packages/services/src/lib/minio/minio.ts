@@ -39,7 +39,7 @@ export async function getMinioObjectMeta(name: string) {
 export async function putMinioObject(objectName: string, filePath: string, owner: string, metaData?: ItemBucketMetadata) {
     const minioClient = await getMinio();
     const putResult = await minioClient.fPutObject(MINIO_BUCKET, objectName, filePath, metaData);
-    // TODO: check --> await setMinioObjectTagList(objectName || "", { owner })
+    await setMinioObjectTagList(objectName || "", { owner: owner })
     return putResult;
 }
 
