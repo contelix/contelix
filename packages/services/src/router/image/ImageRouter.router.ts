@@ -1,7 +1,8 @@
-import { Router } from "express";
+import { Request, Router } from "express";
 import multer from "multer";
 import fs from "fs";
-import { Image, addFluffyImage, getFluffyImage } from "../../lib";
+import { CACHE_MULTER, FluffyPost, addFluffyPost, getFluffyPost } from "../../lib";
+import FluffyError from "../../lib/errors/FluffyError.error";
 
 const ImageRouter = Router();
 
@@ -16,8 +17,8 @@ ImageRouter.use(async (req, res, next) => {
 ImageRouter.get("/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        const { image, stream } = await getFluffyImage(id);
-        res.status(200).type(image.mimeType);
+        const { post, stream } = await getFluffyPost(id);
+        res.status(200).type(post.file.mimetype);
         stream.pipe(res);
     } catch (e: unknown) {
         res.status(404).send(`${id} not found`)
@@ -25,26 +26,30 @@ ImageRouter.get("/:id", async (req, res) => {
 })
 
 const upload = multer({
-    dest: `./cache/multer`
+    dest: CACHE_MULTER
 }).single('file');
 
-ImageRouter.post("/", upload, async (req, res) => {
+async function requestToFluffyPost(req: Request): Promise<FluffyPost> {
     const owner = typeof req.headers["fluffy-user"] === "string" ? req.headers["fluffy-user"] : "unknown";
-    const imageData: Image = {
-        filename: req.file?.originalname || "",
-        isPublished: false,
-        mimeType: req.file?.mimetype || "application/appliaction",
-        owner: owner,
-        size: req.file?.size || 0,
+    
+    if(!req.file) {
+        throw new FluffyError(`Request is missing file`);  
     }
 
-    try {
-        const imageId = await addFluffyImage(req.file?.path || "", imageData)
+    return  {
+        file: req.file,
+        owner: owner,
+    }
+}
 
-        fs.unlinkSync(req.file?.path || "");
-        res.json({ ...req.file, status: "OK", id: imageId });
+ImageRouter.post("/", upload, async (req, res) => {
+    const fluffyPost = await requestToFluffyPost(req);
+    try {
+        const imageId = await addFluffyPost(fluffyPost);
+        fs.unlinkSync(fluffyPost.file?.path || "");
+        res.json(fluffyPost);
     } catch (e: unknown) {
-        console.log("Image Data", imageData)
+        console.log("Image Data", fluffyPost)
         console.error(e);
         res.status(500).send("Error on upload");
     }

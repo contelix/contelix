@@ -10,6 +10,8 @@ if (env.NODE_ENV !== "production") {
 export const PORT: number = parseInt(env.PORT || "3000") || 3000;
 export const HOSTNAME: string = env.HOSTNAME || "localhost";
 
+export const CACHE_MULTER:string = env.FILE_CACHE || "./cache/multer"
+
 export const JWT_KEY: string = env.JWT_KEY || "TO BE SET!";
 
 export const MINIO_ACCESS_KEY: string = env.MINIO_ACCESS_KEY || "minioadmin";

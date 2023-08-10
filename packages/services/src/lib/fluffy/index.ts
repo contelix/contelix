@@ -1,2 +1,2 @@
 export * from "./fluffy"
-export * from "./Image.interface"
+export * from "./FluffyPost.interface"

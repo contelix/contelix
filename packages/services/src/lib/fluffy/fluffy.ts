@@ -1,40 +1,61 @@
 import { FluffyErrorItemNotFound } from "../errors";
 import { getMinioObject, putMinioObject } from "../minio";
-import { Image } from "./Image.interface";
-import { addMongoImage, findMongoImage } from "../mongo/mongo";
+import { addMongoPost, findMongoPost } from "../mongo/mongo";
 import type { Readable as ReadableStream } from 'node:stream'
+import { FluffyPost } from "./FluffyPost.interface";
 
+const MIME_TYPE_UNKNOWN = "application/octet-stream";
 export interface FluffyImage {
-    image: Image,
+    post: FluffyPost,
     stream: ReadableStream
 }
 
+/**
+ * Generates an object name from owner, imageId and filename
+ * 
+ * @param {string} owner 
+ * @param {string} imageId 
+ * @param {string} filename 
+ * @returns {string} generated object name
+ */
 function generateObjectName(owner: string, imageId: string, filename: string): string {
     return `users/${owner}/${imageId}-${filename}`;
 }
 
-export async function getFluffyImage(id: string): Promise<FluffyImage> {
-    const image = await findMongoImage(id);
-    if (image === null) {
+/**
+ * Respons everything needed so send http response for given id of found. FluffyPost includes meta and stream.
+ * 
+ * @param id - id of an image
+ * @returns Promise<FluffyPost> if image was found for id
+ */
+export async function getFluffyPost(id: string): Promise<FluffyImage> {
+    const post = await findMongoPost(id);
+    if (post === null) {
         throw new FluffyErrorItemNotFound(`Not item found for: ${id}`);
     }
-    const objectName = generateObjectName(image.owner, image._id?.toString() || "", image.filename);
+    const objectName = generateObjectName(post.owner, post._id?.toString() || "", post.file.originalname);
 
     return {
-        image: image,
+        post: post,
         stream: await getMinioObject(objectName)
     }
 }
 
-export async function addFluffyImage(filePath: string, image: Image): Promise<string> {
-    const imageId = await addMongoImage(image);
+/**
+ * Creates a blank unpublished post just including file.
+ * 
+ * @param post - FluffyPost
+ * @returns posts id
+ */
+export async function addFluffyPost(post: FluffyPost): Promise<string> {
+    const postId = await addMongoPost(post);
     await putMinioObject(
-        generateObjectName(image.owner, imageId, image.filename),
-        filePath,
-        image.owner,
+        generateObjectName(post.owner, postId, post.file.originalname),
+        post.file.filename,
+        post.owner,
         {
-            "content-type": image.mimeType
+            "content-type": post.file.mimetype || MIME_TYPE_UNKNOWN
         }
     );
-    return imageId;
+    return postId;
 }
