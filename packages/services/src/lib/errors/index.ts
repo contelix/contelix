@@ -1,3 +1,3 @@
-export * from "./FluffyError.error"
-export * from "./FluffyErrorAuth.error"
-export * from "./FluffyErrorItemNotFound.error"
+export * from "./ContelixError.error"
+export * from "./ContelixErrorAuth.error"
+export * from "./ContelixErrorItemNotFound.error"

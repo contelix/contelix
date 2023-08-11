@@ -1,12 +1,12 @@
-import { FluffyErrorItemNotFound } from "../errors";
 import { getMinioObject, putMinioObject } from "../minio";
 import { addMongoPost, findMongoPost } from "../mongo/mongo";
 import type { Readable as ReadableStream } from 'node:stream'
-import { FluffyPost } from "./FluffyPost.interface";
+import { ContelixPost } from "./ContelixPost.interface";
+import { ContelixErrorItemNotFound } from "../errors";
 
 const MIME_TYPE_UNKNOWN = "application/octet-stream";
-export interface FluffyImage {
-    post: FluffyPost,
+export interface ContelixImage {
+    post: ContelixPost,
     stream: ReadableStream
 }
 
@@ -23,15 +23,15 @@ function generateObjectName(owner: string, imageId: string, filename: string): s
 }
 
 /**
- * Respons everything needed so send http response for given id of found. FluffyPost includes meta and stream.
+ * Respons everything needed so send http response for given id of found. ContelixPost includes meta and stream.
  * 
  * @param id - id of an image
- * @returns Promise<FluffyPost> if image was found for id
+ * @returns Promise<ContelixPost> if image was found for id
  */
-export async function getFluffyPost(id: string): Promise<FluffyImage> {
+export async function getContelixPost(id: string): Promise<ContelixImage> {
     const post = await findMongoPost(id);
     if (post === null) {
-        throw new FluffyErrorItemNotFound(`Not item found for: ${id}`);
+        throw new ContelixErrorItemNotFound(`Not item found for: ${id}`);
     }
     const objectName = generateObjectName(post.owner, post._id?.toString() || "", post.file.originalname);
 
@@ -44,10 +44,10 @@ export async function getFluffyPost(id: string): Promise<FluffyImage> {
 /**
  * Creates a blank unpublished post just including file.
  * 
- * @param post - FluffyPost
+ * @param post - ContelixPost
  * @returns posts id
  */
-export async function addFluffyPost(post: FluffyPost): Promise<string> {
+export async function addContelixPost(post: ContelixPost): Promise<string> {
     const postId = await addMongoPost(post);
     await putMinioObject(
         generateObjectName(post.owner, postId, post.file.originalname),

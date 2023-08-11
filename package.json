@@ -1,7 +1,7 @@
 {
-  "name": "fluffy",
+  "name": "contelix",
   "version": "0.0.1",
-  "repository": "https://github.com/no4any/fluffy.git",
+  "repository": "https://github.com/contelix/contelix.git",
   "author": "Martin Karry <martin@karry.de>",
   "license": "MIT",
   "private": true,
@@ -13,9 +13,14 @@
     "test": "yarn workspaces run test",
     "build": "yarn workspaces run build",
     "clean": "yarn workspaces run clean",
-    "services:start": "yarn workspace @fluffy/services run start",
-    "services:test": "yarn workspace @fluffy/services run test",
-    "services:dev": "yarn workspace @fluffy/services run dev"
+    "ui:start": "yarn workspace @contelix/ui run start",
+    "ui:build": "yarn workspace @contelix/ui run build",
+    "ui:test": "yarn workspace @contelix/ui run test",
+    "ui:dev": "yarn workspace @contelix/ui run dev",
+    "services:start": "yarn workspace @contelix/services run start",
+    "services:build": "yarn workspace @contelix/services run build",
+    "services:test": "yarn workspace @contelix/services run test",
+    "services:dev": "yarn workspace @contelix/services run dev"
   },
   "devDependencies": {
     "yarn": "^1.22.19"

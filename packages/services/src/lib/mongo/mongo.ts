@@ -1,6 +1,6 @@
 import { MongoClient, Db, Collection, ObjectId } from "mongodb";
 import { MONGO_CONNECTION_STRING, MONGO_DATABASE_NAME, MONGO_IMAGES_COLLECTION_NAME } from "../../env";
-import { FluffyPost } from "../fluffy";
+import { ContelixPost } from "../contelix";
 
 let mongoClient: undefined | MongoClient;
 
@@ -17,18 +17,18 @@ async function getMongoDb(): Promise<Db> {
     return mongoClient.db(MONGO_DATABASE_NAME);
 }
 
-async function getMongoPostsCollection(): Promise<Collection<FluffyPost>> {
+async function getMongoPostsCollection(): Promise<Collection<ContelixPost>> {
     const db = await getMongoDb();
-    return db.collection<FluffyPost>(MONGO_IMAGES_COLLECTION_NAME);
+    return db.collection<ContelixPost>(MONGO_IMAGES_COLLECTION_NAME);
 }
 
-export async function addMongoPost(post: FluffyPost): Promise<string> {
+export async function addMongoPost(post: ContelixPost): Promise<string> {
     const collection = await getMongoPostsCollection();
     const image = await collection.insertOne(post);
     return image.insertedId.toString();
 }
 
-export async function findMongoPost(id: string): Promise<FluffyPost | null> {
+export async function findMongoPost(id: string): Promise<ContelixPost | null> {
     const collection = await getMongoPostsCollection();
     return await collection.findOne({ _id: new ObjectId(id) })
 }

@@ -1,5 +1,38 @@
 version: '3.8'
 services:
+  contelix-services:
+    build: packages/services
+    restart: always
+    depends_on:
+      - mongo
+      - minio
+    ports:
+      - 3001:3001
+    volumes:
+      - services-volume:/cache/multer
+    environment:
+      PORT: 3001
+      HOSTNAME: contelix-services
+      CACHE_MULTER: /cache/multer
+      JWT_KEY:  changeme
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_USE_SSL: false
+      MINIO_PORT: 9000
+      MINIO_END_POINT: minio 
+      MINIO_BUCKET: contelix
+      MONGO_CONNECTION_STRING: mongodb://mongoUser:mongoPass@mongo:27017
+      MONGO_DATABASE_NAME: contelix
+      MONGO_IMAGES_COLLECTION_NAME: posts
+  contelix_ui:
+    build: packages/ui
+    restart: always
+    depends_on:
+      - contelix-services
+    ports:
+      - 3000:3000
+    environment:
+      BASE_PATH_SERVICES: http://contelix-services:3001
   mongo:
     image: mongo
     restart: always
@@ -32,3 +65,4 @@ services:
 volumes:
   minio-volume:
   mongo-volume:
+  services-volume:

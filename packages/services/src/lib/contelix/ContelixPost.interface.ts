@@ -1,9 +1,9 @@
 import { ObjectId } from "mongodb";
 
 /**
- * Post type for Fluffy
+ * Post type for Contelix
  */
-export interface FluffyPost {
+export interface ContelixPost {
     _id?: ObjectId,
     file: Express.Multer.File,
     owner: string,
