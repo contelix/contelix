@@ -7,7 +7,6 @@ export function middleware(request: NextRequest) {
     if (request.nextUrl.pathname.startsWith('/img')) {
         const headers = new Headers(request.headers);
         headers.set("fluffy-user", "martin");
-        console.log(headers);
         return NextResponse.rewrite(`${BASE_PATH_SERVICES}${request.nextUrl.pathname}`, {
             headers: headers
         });
