@@ -1,11 +1,11 @@
 import { getMinioObject, putMinioObject } from "../minio";
-import { addMongoPost, findMongoPost } from "../mongo/mongo";
+import { addMongoPost, findMongoPost, setMongoPostDescription } from "../mongo/mongo";
 import type { Readable as ReadableStream } from 'node:stream'
 import { ContelixPost } from "./ContelixPost.interface";
 import { ContelixErrorItemNotFound } from "../errors";
 
 const MIME_TYPE_UNKNOWN = "application/octet-stream";
-export interface ContelixImage {
+export interface ContelixPostWrapper {
     post: ContelixPost,
     stream: ReadableStream
 }
@@ -22,13 +22,17 @@ function generateObjectName(owner: string, imageId: string, filename: string): s
     return `users/${owner}/${imageId}-${filename}`;
 }
 
+async function hashTagsFromString(text: string): Promise<string[]> {
+    return text.split(' ').filter((item) => item.startsWith('#'));
+}
+
 /**
  * Respons everything needed so send http response for given id of found. ContelixPost includes meta and stream.
  * 
  * @param id - id of an image
  * @returns Promise<ContelixPost> if image was found for id
  */
-export async function getContelixPost(id: string): Promise<ContelixImage> {
+export async function getContelixPost(id: string): Promise<ContelixPostWrapper> {
     const post = await findMongoPost(id);
     if (post === null) {
         throw new ContelixErrorItemNotFound(`Not item found for: ${id}`);
@@ -39,6 +43,14 @@ export async function getContelixPost(id: string): Promise<ContelixImage> {
         post: post,
         stream: await getMinioObject(objectName)
     }
+}
+
+export async function getContelixPostMeta(id: string) {
+    const post = await findMongoPost(id);
+    if(post) {
+        return post;
+    }
+    throw new ContelixErrorItemNotFound(`ItemId ${id} not found.`)
 }
 
 /**
@@ -58,4 +70,11 @@ export async function addContelixPost(post: ContelixPost): Promise<string> {
         }
     );
     return postId;
+}
+
+export async function setContelixPostDescription(id: string, description: string) {
+    const result = await setMongoPostDescription(id, description);
+    return {
+        updated: result.modifiedCount
+    }
 }

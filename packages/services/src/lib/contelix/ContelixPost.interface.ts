@@ -8,5 +8,6 @@ export interface ContelixPost {
     file: Express.Multer.File,
     owner: string,
     published?: boolean,
-    description?: string
+    description?: string,
+    tags?: string
 }

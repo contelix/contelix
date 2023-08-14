@@ -1,7 +1,7 @@
 import { Request, Router } from "express";
 import multer from "multer";
 import fs from "fs";
-import { CACHE_MULTER, ContelixError, ContelixPost, addContelixPost, getContelixPost } from "../../lib";
+import { CACHE_MULTER, ContelixError, ContelixPost, addContelixPost, getContelixPost, getContelixPostMeta, setContelixPostDescription } from "../../lib";
 
 const ImageRouter = Router();
 const HEADER_FIELDNAME_USER = "user"
@@ -25,18 +25,28 @@ ImageRouter.get("/:id", async (req, res) => {
     }
 })
 
+// TODO: Test
+ImageRouter.get("/meta/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+        return getContelixPostMeta(id);
+    } catch (e: unknown) {
+        res.status(404).send(`${id} not found`)
+    }
+})
+
 const upload = multer({
     dest: CACHE_MULTER
 }).single('file');
 
 async function requestToContelixPost(req: Request): Promise<ContelixPost> {
     const owner = typeof req.headers[HEADER_FIELDNAME_USER] === "string" ? req.headers[HEADER_FIELDNAME_USER] : "unknown";
-    
-    if(!req.file) {
-        throw new ContelixError(`Request is missing file`);  
+
+    if (!req.file) {
+        throw new ContelixError(`Request is missing file`);
     }
 
-    return  {
+    return {
         file: req.file,
         owner: owner,
     }
@@ -45,13 +55,22 @@ async function requestToContelixPost(req: Request): Promise<ContelixPost> {
 ImageRouter.post("/", upload, async (req, res) => {
     const contelixPost = await requestToContelixPost(req);
     try {
-        const imageId = await addContelixPost(contelixPost);
+        await addContelixPost(contelixPost);
         fs.unlinkSync(contelixPost.file?.path || "");
         res.json(contelixPost);
     } catch (e: unknown) {
         console.log("Image Data", contelixPost)
         console.error(e);
         res.status(500).send("Error on upload");
+    }
+})
+
+ImageRouter.post("/description", async (req, res) => {
+    const { id, description } = req.body;
+    if (typeof id === "string" || typeof description === "string") {
+        res.send(await setContelixPostDescription(id, description));
+    } else {
+        res.status(400).send("Wrong parameters")
     }
 })
 
