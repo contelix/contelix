@@ -9,10 +9,11 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "yarn workspaces run start",
-    "test": "yarn workspaces run test",
-    "build": "yarn workspaces run build",
-    "clean": "yarn workspaces run clean",
+    "start": "turbo run start",
+    "test": "turbo run test",
+    "build": "turbo run build",
+    "clean": "turbo run clean",
+    "dev": "turbo run dev",
     "ui:start": "yarn workspace @contelix/ui run start",
     "ui:build": "yarn workspace @contelix/ui run build",
     "ui:test": "yarn workspace @contelix/ui run test",
@@ -23,6 +24,7 @@
     "services:dev": "yarn workspace @contelix/services run dev"
   },
   "devDependencies": {
+    "turbo": "^1.10.12",
     "yarn": "^1.22.19"
   }
 }
