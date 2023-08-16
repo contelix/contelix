@@ -5,6 +5,7 @@ import { ObjectId } from "mongodb";
  */
 export interface ContelixPost {
     _id?: ObjectId,
+    creationTime: number,
     file: Express.Multer.File,
     owner: string,
     published?: boolean,

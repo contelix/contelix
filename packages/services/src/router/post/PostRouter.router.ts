@@ -57,6 +57,7 @@ async function requestToContelixPost(req: Request): Promise<ContelixPost> {
     return {
         file: req.file,
         owner: owner,
+        creationTime: Date.now()
     }
 }
 
