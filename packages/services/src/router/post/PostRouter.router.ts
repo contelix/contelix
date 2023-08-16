@@ -1,7 +1,7 @@
 import { Request, Router } from "express";
 import multer from "multer";
 import fs from "fs";
-import { CACHE_MULTER, ContelixError, ContelixPost, addContelixPost, getContelixPost, getContelixPostMeta, setContelixPostDescription } from "../../lib";
+import { CACHE_MULTER, ContelixError, ContelixPost, addContelixPost, getContelixPost, getContelixPostMeta, getContelixPostOfUser, setContelixPostDescription } from "../../lib";
 
 const PostRouter = Router();
 const HEADER_FIELDNAME_USER = "user"
@@ -25,13 +25,21 @@ PostRouter.get("/:id", async (req, res) => {
     }
 })
 
-// TODO: Test
 PostRouter.get("/meta/:id", async (req, res) => {
     const { id } = req.params;
     try {
-        return getContelixPostMeta(id);
+        res.json(await getContelixPostMeta(id));
     } catch (e: unknown) {
-        res.status(404).send(`${id} not found`)
+        res.status(404).send(`Post "${id}" not found`)
+    }
+})
+
+PostRouter.get("/users/:username", async (req, res) => {
+    const { username } = req.params;
+    try {
+        res.json(await getContelixPostOfUser(username));
+    } catch(e: unknown) {
+        res.status(404).send(`User "${username}" not found`)
     }
 })
 

@@ -1,5 +1,5 @@
 import { getMinioObject, putMinioObject } from "../minio";
-import { addMongoPost, findMongoPost, setMongoPostDescription } from "../mongo/mongo";
+import { addMongoPost, findMongoPost, getMongoPostsOfUser, setMongoPostDescription } from "../mongo/mongo";
 import type { Readable as ReadableStream } from 'node:stream'
 import { ContelixPost } from "./ContelixPost.interface";
 import { ContelixErrorItemNotFound } from "../errors";
@@ -47,7 +47,7 @@ export async function getContelixPost(id: string): Promise<ContelixPostWrapper> 
 
 export async function getContelixPostMeta(id: string) {
     const post = await findMongoPost(id);
-    if(post) {
+    if (post) {
         return post;
     }
     throw new ContelixErrorItemNotFound(`ItemId ${id} not found.`)
@@ -77,4 +77,8 @@ export async function setContelixPostDescription(id: string, description: string
     return {
         updated: result.modifiedCount
     }
+}
+
+export async function getContelixPostOfUser(username: string) {
+    return (await getMongoPostsOfUser(username)).toArray();
 }

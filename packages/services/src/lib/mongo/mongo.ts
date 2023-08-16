@@ -42,3 +42,8 @@ export async function setMongoPostPublished(id: string, published?: boolean) {
     const collection = await getMongoPostsCollection();
     return await collection.updateOne({ _id: new Object(id) }, { published: published })
 }
+
+export async function getMongoPostsOfUser(username: string) {
+    const collection = await getMongoPostsCollection();
+    return await collection.find({owner: username})
+}
