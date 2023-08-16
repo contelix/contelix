@@ -17,7 +17,8 @@ app.use("/auth", AuthRouter);
 
 app.get("/version", (_req, res) => {
     res.json({
-        version: PACKAGE_JSON.version
+        version: PACKAGE_JSON.version,
+        time: Date.now()
     })
 })
 
