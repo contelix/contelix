@@ -1,4 +1,5 @@
 import "./env";
+import PACKAGE_JSON from "../package.json"
 
 import bodyParser from "body-parser";
 import express from "express";
@@ -13,6 +14,12 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use("/img", ImageRouter);
 app.use("/auth", AuthRouter);
+
+app.get("/version", (_req, res) => {
+    res.json({
+        version: PACKAGE_JSON.version
+    })
+})
 
 app.get("*", (_req, res) => {
     res.status(404).send("Not available.")
