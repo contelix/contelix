@@ -6,5 +6,5 @@ export async function getContelixPostMeta(id: string) {
     if (post) {
         return post;
     }
-    throw new ContelixErrorItemNotFound(`ItemId ${id} not found.`)
+    throw new ContelixErrorItemNotFound(id)
 }

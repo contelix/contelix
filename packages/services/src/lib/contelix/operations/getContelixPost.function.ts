@@ -13,7 +13,7 @@ import { generateObjectName } from "./helper";
 export async function getContelixPost(id: string): Promise<ContelixPostWrapper> {
     const post = await findMongoPost(id);
     if (post === null) {
-        throw new ContelixErrorItemNotFound(`Not item found for: ${id}`);
+        throw new ContelixErrorItemNotFound(id);
     }
     const objectName = generateObjectName(post.owner, post._id?.toString() || "", post.file.originalname);
 
