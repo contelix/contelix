@@ -3,10 +3,10 @@ import multer from "multer";
 import fs from "fs";
 import { CACHE_MULTER, ContelixError, ContelixPost, addContelixPost, getContelixPost, getContelixPostMeta, setContelixPostDescription } from "../../lib";
 
-const ImageRouter = Router();
+const PostRouter = Router();
 const HEADER_FIELDNAME_USER = "user"
 
-ImageRouter.use(async (req, res, next) => {
+PostRouter.use(async (req, res, next) => {
     if (typeof req.headers[HEADER_FIELDNAME_USER] === "string") {
         next();
     } else {
@@ -14,7 +14,7 @@ ImageRouter.use(async (req, res, next) => {
     }
 })
 
-ImageRouter.get("/:id", async (req, res) => {
+PostRouter.get("/:id", async (req, res) => {
     const { id } = req.params;
     try {
         const { post, stream } = await getContelixPost(id);
@@ -26,7 +26,7 @@ ImageRouter.get("/:id", async (req, res) => {
 })
 
 // TODO: Test
-ImageRouter.get("/meta/:id", async (req, res) => {
+PostRouter.get("/meta/:id", async (req, res) => {
     const { id } = req.params;
     try {
         return getContelixPostMeta(id);
@@ -52,7 +52,7 @@ async function requestToContelixPost(req: Request): Promise<ContelixPost> {
     }
 }
 
-ImageRouter.post("/", upload, async (req, res) => {
+PostRouter.post("/", upload, async (req, res) => {
     const contelixPost = await requestToContelixPost(req);
     try {
         await addContelixPost(contelixPost);
@@ -65,7 +65,7 @@ ImageRouter.post("/", upload, async (req, res) => {
     }
 })
 
-ImageRouter.post("/description", async (req, res) => {
+PostRouter.post("/description", async (req, res) => {
     const { id, description } = req.body;
     if (typeof id === "string" || typeof description === "string") {
         res.send(await setContelixPostDescription(id, description));
@@ -74,4 +74,4 @@ ImageRouter.post("/description", async (req, res) => {
     }
 })
 
-export default ImageRouter;
+export default PostRouter;

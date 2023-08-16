@@ -3,7 +3,7 @@ import PACKAGE_JSON from "../package.json"
 
 import bodyParser from "body-parser";
 import express from "express";
-import ImageRouter from "./router/image/ImageRouter.router";
+import PostRouter from "./router/post/PostRouter.router";
 import AuthRouter from "./router/auth/AuthRouter.router";
 import { HOSTNAME, PORT } from "./lib";
 
@@ -12,7 +12,7 @@ const app = express();
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
-app.use("/img", ImageRouter);
+app.use("/img", PostRouter);
 app.use("/auth", AuthRouter);
 
 app.get("/version", (_req, res) => {
