@@ -1,0 +1,5 @@
+export * from "./addMongoPost.function"
+export * from "./findMongoPost.function"
+export * from "./getMongoPostsOfUser.function"
+export * from "./setMongoPostDescription.function"
+export * from "./setMongoPostPublished.function"

@@ -1,8 +1,8 @@
 import { getMinioObject, putMinioObject } from "../minio";
-import { addMongoPost, findMongoPost, getMongoPostsOfUser, setMongoPostDescription } from "../mongo/mongo";
 import type { Readable as ReadableStream } from 'node:stream'
 import { ContelixPost } from "./ContelixPost.interface";
 import { ContelixErrorItemNotFound } from "../errors";
+import { addMongoPost, findMongoPost, getMongoPostsOfUser, setMongoPostDescription } from "../mongo";
 
 const MIME_TYPE_UNKNOWN = "application/octet-stream";
 export interface ContelixPostWrapper {
